@@ -1,0 +1,62 @@
+Aim: Write a program for Optimal merge patterns.
+Solution:
+
+
+#include <stdio.h>
+#include <stdlib.h>
+struct Node {
+ int data;
+ struct Node *next;
+};
+struct Node* newNode(int data) {
+ struct Node* temp = (struct Node*)malloc(sizeof(struct Node));
+ temp->data = data;
+ temp->next = NULL;
+ return temp;
+}
+int compareNodes(const void* a, const void* b) {
+ return (*(int*)a - *(int*)b);
+}
+int mergeFiles(int files[], int n) {
+ struct Node *priorityQueue = NULL;
+ for (int i = 0; i < n; i++)
+ priorityQueue = insert(priorityQueue, files[i]);
+ int cost = 0;
+ while (priorityQueue->next != NULL) {
+ int first = priorityQueue->data;
+ priorityQueue = deleteNode(priorityQueue);
+ int second = priorityQueue->data;
+ priorityQueue = deleteNode(priorityQueue);
+ int mergedSize = first + second;
+ cost += mergedSize;
+ priorityQueue = insert(priorityQueue, mergedSize);
+ }
+ return cost;
+}
+struct Node* insert(struct Node* head, int data) {
+ struct Node* temp = newNode(data);
+ if (head == NULL || data < head->data) {
+ temp->next = head;
+ head = temp;
+ } else {
+ struct Node* current = head;
+ while (current->next != NULL && current->next->data < data)
+ current = current->next;
+ temp->next = current->next;
+ current->next = temp;
+ }
+ return head;
+}
+struct Node* deleteNode(struct Node* head) {
+ if (head == NULL)
+ return NULL;
+ struct Node* temp = head->next;
+ free(head);
+ return temp;
+}
+int main() {
+ int files[] = { 2, 3, 4, 5 };
+ int n = sizeof(files) / sizeof(files[0]);
+ printf("Minimum cost of merging files is %d\n", mergeFiles(files, n));
+ return 0;
+}
