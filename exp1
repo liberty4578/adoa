@@ -1,0 +1,44 @@
+Aim: Write a program for Iterative and Recursive Binary Search.
+Solution:
+
+#include <iostream>
+using namespace std;
+int iterativeSearch(int arr[], int n, int element) {
+    int left = 0;
+    int right = n - 1;
+    while (left <= right) {
+        int mid = left + (right - left) / 2;
+        if (arr[mid] == element) {
+            return mid;
+        } else if (arr[mid] < element) {
+            left = mid + 1;
+        } else {
+            right = mid - 1;
+        }
+    }
+    return -1;
+}
+int recursiveSearch(int arr[], int left, int right, int element) {
+    if (left > right) {
+        return -1;
+    }
+    int mid = left + (right - left) / 2;
+    if (arr[mid] == element) {
+        return mid;
+    } else if (arr[mid] < element) {
+        return recursiveSearch(arr, mid + 1, right, element);
+    } else {
+        return recursiveSearch(arr, left, mid - 1, element);
+    }
+}
+int main()
+{
+    int arr[] = {1, 2, 3, 4, 5, 6, 7, 8};
+    int n = sizeof(arr) / sizeof(arr[0]);
+    int element = 5;
+    cout << "Iterative Search: " << iterativeSearch(arr, n, element) << endl;
+    cout << "Recursive Search: " << recursiveSearch(arr, 0, n - 1, element) << endl;
+    return 0;
+}
+Output:
+
